@@ -13,7 +13,7 @@ for a possible future re-split, not because anything currently routes elsewhere.
 |---|---|---|
 | `normalize.py` | `TASKS.md` 0.2.2 | Text + multi-format date normalization rules (ADR-011). Never guesses a date; blank / unparseable / ambiguous are explicit statuses. |
 | `fuzzy_dedup.py` | `TASKS.md` 0.2.3 | Fuzzy name-variant dedup rules (ADR-012), three bands: merge / review / new. **Live OP-01 intake rule set only** — the bulk loader never runs it against seed rows (ADR-006 amendment). |
-| loader itself | `TASKS.md` 3.1–3.2 | Not yet built (Phase 3). |
+| `loader.py` | `TASKS.md` 3.1–3.2 | Schema validation, normalization, dry-run validation, and Supabase reseeding. |
 
 These modules are the executable reference for the rule set the no-code Auto Operators
 (OP-01/OP-02/OP-03) implement independently — one documented specification, two implementations

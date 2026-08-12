@@ -46,7 +46,7 @@ transcribed, not re-derived.
 
 | Field | Justification |
 |---|---|
-| `manager_channel_by_org` | One channel per `Manager_Directory.Org` value (5 values: Finance, Sales, Ops, Engineering, People) — **never** keyed on `Workers.Job_Family`, a different, non-corresponding taxonomy (`ARCHITECTURE.md` §6 "Manager-channel routing"). Values are placeholder channel names until `TASKS.md` 0.1.2 replaces them with the real Slack channel IDs. |
+| `manager_channel_by_org` | One channel per `Manager_Directory.Org` value (5 values: Finance, Sales, Ops, Engineering, People) — **never** keyed on `Workers.Job_Family`, a different, non-corresponding taxonomy (`ARCHITECTURE.md` §6 "Manager-channel routing"). Values in this public repository are intentionally sanitized placeholders; the live workspace uses private Slack channel IDs. |
 | `confidential_channel` | A single, access-restricted channel, deliberately **not** routed by `Org` — fragmenting confidential routing multiplies who can see sensitive material (`DECISIONS.md` ADR-002). |
 | `it_escalation_channel` | Single IT-provisioning escalation channel (`TASKS.md` 0.1.2). |
 

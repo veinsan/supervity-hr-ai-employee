@@ -1,8 +1,25 @@
+# Secrets / local configuration
 .env
 .env.*
 !.env.example
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
 .venv/
 venv/
+
+# IDE / OS
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local outputs
+*.log
+.tmp/
+tmp/

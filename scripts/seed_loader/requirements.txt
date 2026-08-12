@@ -1,7 +1,5 @@
-# Open-source usage is a deliberate, disclosed choice (MASTER_PLAN.md section 4.5):
-# rapidfuzz provides the string-similarity primitive for fuzzy_dedup.py.
-# The module degrades to a stdlib difflib fallback if it is not installed.
+# Fuzzy string similarity. fuzzy_dedup.py falls back to stdlib difflib if unavailable.
 rapidfuzz>=3.0
 
-# HTTP client for airtable_client.py (loader.py, TASKS.md 3.1).
+# HTTP client used by the Supabase REST support utility.
 requests>=2.31

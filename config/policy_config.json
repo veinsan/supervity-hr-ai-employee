@@ -36,14 +36,14 @@
   },
   "routing": {
     "manager_channel_by_org": {
-      "Finance": "C0BJA0P1M6V",
-      "Sales": "C0BJBQ02U2Y",
-      "Ops": "C0BHSMV328P",
-      "Engineering": "C0BJ4PYGV5K",
-      "People": "C0BJ4PZ8961"
+      "Finance": "SLACK_CHANNEL_FINANCE",
+      "Sales": "SLACK_CHANNEL_SALES",
+      "Ops": "SLACK_CHANNEL_OPS",
+      "Engineering": "SLACK_CHANNEL_ENGINEERING",
+      "People": "SLACK_CHANNEL_PEOPLE"
     },
-    "confidential_channel": "C0BK2CRJ596",
-    "it_escalation_channel": "C0BJ839B24A"
+    "confidential_channel": "SLACK_CHANNEL_CONFIDENTIAL_HR",
+    "it_escalation_channel": "SLACK_CHANNEL_IT_ESCALATION"
   },
   "templates": {
     "manager_nudge": "Onboarding check-in needed: {{preferred_name}} ({{employee_id}}), day {{day_number}} of 90. Signal: {{reason_summary}}. Please check in with your new hire and update the onboarding task tracker. Case {{case_id}}.",
@@ -52,7 +52,11 @@
   },
   "retry": {
     "max_attempts": 3,
-    "backoff_seconds": [5, 20, 60]
+    "backoff_seconds": [
+      5,
+      20,
+      60
+    ]
   },
   "retry_demo_profile": {
     "max_attempts": 1,

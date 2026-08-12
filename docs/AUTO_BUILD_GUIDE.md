@@ -100,11 +100,11 @@ implicit system clock directly.
 | Thing | Value |
 |---|---|
 | Supabase tables (§A) | `Workers`, `Manager_Directory`, `policy_config`, `Onboarding_Tasks`, `Provisioning_Integration`, `Peakon_Engagement`, `Cases_Audit_Log` — all 7, Airtable fully deprecated |
-| Manager-nudge channels (by `Manager_Directory.Org`) | Finance `C0BJA0P1M6V` · Sales `C0BJBQ02U2Y` · Ops `C0BHSMV328P` · Engineering `C0BJ4PYGV5K` · People `C0BJ4PZ8961` |
-| IT-escalation channel | `C0BJ839B24A` |
-| Confidential HR channel | `C0BK2CRJ596` |
+| Manager-nudge channels (by `Manager_Directory.Org`) | Finance `SLACK_CHANNEL_FINANCE` · Sales `SLACK_CHANNEL_SALES` · Ops `SLACK_CHANNEL_OPS` · Engineering `SLACK_CHANNEL_ENGINEERING` · People `SLACK_CHANNEL_PEOPLE` |
+| IT-escalation channel | `SLACK_CHANNEL_IT_ESCALATION` |
+| Confidential HR channel | `SLACK_CHANNEL_CONFIDENTIAL_HR` |
 | `policy_config` shape | columns `field_key` / `category` / `value` / `justification`; read the `value` column of the matching `field_key` row. `manager_channel_by_org` `value` is a JSON string. |
-| Known-good test manager | Name `Kevin Goh`, `Manager_WID` `006140bc-6dbd-2df9-29ec-9b1114eca3ab`, Org `Sales` → channel `C0BJBQ02U2Y` |
+| Known-good test manager | Name `Kevin Goh`, `Manager_WID` `006140bc-6dbd-2df9-29ec-9b1114eca3ab`, Org `Sales` → channel `SLACK_CHANNEL_SALES` |
 
 ### §F — Assumptions flagged in this guide (design-fill beyond the frozen spec)
 These are calls made where the spec's input contracts don't fully pin down a template/field source. They
@@ -496,8 +496,8 @@ step still runs, then revert.
 
 | # | Scenario | Input | Expected outcome |
 |---|---|---|---|
-| 1 | Manager nudge sends | `manager_nudge`, valid channel resolved (Sales `C0BJBQ02U2Y`) | Message posts to the Sales channel; `outcome: sent` |
-| 2 | Confidential sends to confidential channel | `confidential_disclosure` | Comment-free alert posts to `C0BK2CRJ596`; `outcome: sent` |
+| 1 | Manager nudge sends | `manager_nudge`, valid channel resolved (Sales `SLACK_CHANNEL_SALES`) | Message posts to the Sales channel; `outcome: sent` |
+| 2 | Confidential sends to confidential channel | `confidential_disclosure` | Comment-free alert posts to `SLACK_CHANNEL_CONFIDENTIAL_HR`; `outcome: sent` |
 | 3 | Slack failure → retry → escalate + audit still runs | Channel forced to `C000INVALID`, `demo_mode` off | 3 attempts, then Workbench escalation `op04_notification_failure`, **and** the audit-log step still executes with `outcome: escalated` |
 | 4 | `workbench_log` skips Slack | `case_type` = `workbench_log` | No Slack post attempted; flows straight to audit-log step |
 
@@ -571,8 +571,8 @@ credential or its leftover "Cases & Audit Log" table, which are deprecated).
 | # | Scenario | Input | Expected audit row |
 |---|---|---|---|
 | 1 | Manager nudge logged | `manager_nudge`, sent | 1 row: `case_type` manager_nudge, `channel` = Sales ID, `policy_rules_fired` listing the codes, `outcome` sent |
-| 2 | IT escalation logged | `it_escalation`, sent | 1 row: channel = `C0BJ839B24A`, outcome sent |
-| 3 | Confidential logged, comment-free | `confidential_disclosure` with sentinel payload | 1 row: channel = `C0BK2CRJ596`, outcome sent, and **no field contains** `SENTINEL_SECRET_HEALTH_XYZ` |
+| 2 | IT escalation logged | `it_escalation`, sent | 1 row: channel = `SLACK_CHANNEL_IT_ESCALATION`, outcome sent |
+| 3 | Confidential logged, comment-free | `confidential_disclosure` with sentinel payload | 1 row: channel = `SLACK_CHANNEL_CONFIDENTIAL_HR`, outcome sent, and **no field contains** `SENTINEL_SECRET_HEALTH_XYZ` |
 | 4 | Workbench log (direct escalation) | `workbench_log` | 1 row: `channel` = `workbench`, `outcome` escalated, no Slack sent |
 | 5 | Slack-failure case still logs | `manager_nudge`, channel forced invalid | 1 row written with `channel` = `workbench`, `outcome` escalated (audit survives the send failure) |
 
@@ -585,9 +585,9 @@ Run all 6 end-to-end and confirm both the routing/send outcome and the resulting
 
 | # | Case | Input | Expected outcome | Expected audit row |
 |---|---|---|---|---|
-| 1 | manager_nudge | valid worker → Sales | Posts to `C0BJBQ02U2Y`, `sent` | manager_nudge / Sales channel / `sent` |
-| 2 | it_escalation | any | Posts to `C0BJ839B24A`, `sent` | it_escalation / IT channel / `sent` |
-| 3 | confidential_disclosure | sentinel payload | Comment-free alert to `C0BK2CRJ596`, `sent` | confidential / conf. channel / `sent`, **no sentinel anywhere** |
+| 1 | manager_nudge | valid worker → Sales | Posts to `SLACK_CHANNEL_SALES`, `sent` | manager_nudge / Sales channel / `sent` |
+| 2 | it_escalation | any | Posts to `SLACK_CHANNEL_IT_ESCALATION`, `sent` | it_escalation / IT channel / `sent` |
+| 3 | confidential_disclosure | sentinel payload | Comment-free alert to `SLACK_CHANNEL_CONFIDENTIAL_HR`, `sent` | confidential / conf. channel / `sent`, **no sentinel anywhere** |
 | 4 | workbench_log | any | No Slack; logged only | workbench_log / `workbench` / `escalated` |
 | 5 | Unresolved routing | `manager_nudge`, worker with blank `Manager_WID` | Escalate `op04_routing_unresolved`, no Slack | (per your routing-escalation logging choice) |
 | 6 | Slack failure | `manager_nudge`, channel forced `C000INVALID` | Retry → escalate `op04_notification_failure` | manager_nudge / `workbench` / `escalated` |
